@@ -60,9 +60,6 @@ public class AddressEntity implements Serializable {
     @Column(name = "ACTIVE")
     private long active;
 
-    @ManyToMany(mappedBy = "address", fetch = FetchType.LAZY)
-    private List<CustomerEntity> customer = new ArrayList<>();
-
     public Long getId() {
         return id;
     }
@@ -127,11 +124,4 @@ public class AddressEntity implements Serializable {
         this.active = active;
     }
 
-    public List<CustomerEntity> getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(List<CustomerEntity> customer) {
-        this.customer = customer;
-    }
 }

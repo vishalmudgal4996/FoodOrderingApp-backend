@@ -28,6 +28,15 @@ public class CustomerDao {
         }
     }
 
+    public CustomerEntity getCustomerByUuid(final String uuid) {
+        try {
+            return entityManager.createNamedQuery("customerByUuid", CustomerEntity.class).setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
+    }
+
     public CustomerAuthTokenEntity createCustomerAuthToken(CustomerAuthTokenEntity customerAuthTokenEntity){
         entityManager.persist(customerAuthTokenEntity);
         return customerAuthTokenEntity;

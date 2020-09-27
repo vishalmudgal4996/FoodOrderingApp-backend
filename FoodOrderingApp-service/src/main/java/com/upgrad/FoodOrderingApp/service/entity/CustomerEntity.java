@@ -7,8 +7,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,6 +18,7 @@ import javax.validation.constraints.Size;
                 @NamedQuery(name = "customerByUuid", query = "select c from CustomerEntity c where c.uuid = :uuid"),
                 @NamedQuery(name = "customerByContactNumber", query = "select c from CustomerEntity c where c.contactNumber = :contactNumber"),
                 @NamedQuery(name = "customerByEmail", query = "select c from CustomerEntity c where c.email =:email"),
+                @NamedQuery(name = "customerById", query = "select c from CustomerEntity c where c.id = :id"),
         }
 )
 
@@ -63,9 +62,6 @@ public class CustomerEntity implements Serializable {
     @Size(max = 255)
     @ToStringExclude
     private String salt;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<AddressEntity> address = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -131,11 +127,4 @@ public class CustomerEntity implements Serializable {
         this.salt = salt;
     }
 
-    public List<AddressEntity> getAddress() {
-        return address;
-    }
-
-    public void setAddress(List<AddressEntity> address) {
-        this.address = address;
-    }
 }
