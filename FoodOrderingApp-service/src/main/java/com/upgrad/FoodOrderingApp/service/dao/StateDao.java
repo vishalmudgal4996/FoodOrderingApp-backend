@@ -21,4 +21,13 @@ public class StateDao {
             return null;
         }
     }
+
+    public StateEntity getStateById(final Long stateId) {
+        try {
+            return entityManager.createNamedQuery("stateById", StateEntity.class).setParameter("id", stateId)
+                    .getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
+    }
 }

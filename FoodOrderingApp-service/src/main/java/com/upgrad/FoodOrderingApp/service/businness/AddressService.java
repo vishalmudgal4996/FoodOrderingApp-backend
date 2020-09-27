@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Service
 public class AddressService {
@@ -37,6 +38,11 @@ public class AddressService {
             throw new AddressNotFoundException("ANF-002", "No state by this id.");
         }
         return stateEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public StateEntity getStateById(Long stateId) {
+        return stateDao.getStateById(stateId);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -78,6 +84,23 @@ public class AddressService {
         customerAddressDao.createCustomerAddress(customerAddressEntity);
 
         return addressEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AddressEntity> getAllSavedAddresses(final String authorizationToken) throws AuthorizationFailedException {
+
+        final CustomerAuthTokenEntity customerAuthToken = customerDao.getCustomerAuthToken(authorizationToken);
+        final ZonedDateTime now = ZonedDateTime.now();
+
+        if(customerAuthToken == null){
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
+        }else if(customerAuthToken.getLogoutAt() != null){
+            throw new AuthorizationFailedException("ATHR-002", "Customer is logged out. Log in again to access this endpoint.");
+        }else if(now.isAfter(customerAuthToken.getExpiresAt())){
+            throw new AuthorizationFailedException("ATHR-002", "Your session is expired. Log in again to access this endpoint.");
+        }
+
+        return customerAddressDao.getAddressForCustomerByUuid(customerAuthToken.getCustomer().getUuid());
     }
 
 }

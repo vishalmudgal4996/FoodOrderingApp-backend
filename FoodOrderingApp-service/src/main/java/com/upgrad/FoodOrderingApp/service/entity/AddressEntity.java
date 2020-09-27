@@ -19,8 +19,9 @@ import javax.validation.constraints.Size;
 @NamedQueries(
         {
                 @NamedQuery(name = "addressByUuid", query = "select a from AddressEntity a where a.uuid = :uuid"),
-                @NamedQuery(name = "getAllAddresses", query = "select a from AddressEntity a"),
+                @NamedQuery(name = "getAllAddresses", query = "SELECT a FROM AddressEntity a WHERE a.id in :addressIds AND a.active = 1 order by a.id desc"),
                 @NamedQuery(name = "addressById", query = "select a from AddressEntity a where a.id = :id"),
+
         }
 )
 public class AddressEntity implements Serializable {
