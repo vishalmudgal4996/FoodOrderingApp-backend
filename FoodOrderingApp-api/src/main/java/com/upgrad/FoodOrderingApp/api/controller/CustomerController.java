@@ -7,6 +7,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -88,4 +89,25 @@ public class CustomerController {
         return new ResponseEntity<LogoutResponse>
                 (new LogoutResponse().id(customerEntity.getUuid()).message("LOGGED OUT SUCCESSFULLY"),HttpStatus.OK);
     }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/customer",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdateCustomerResponse> updateCustomer(final UpdateCustomerRequest updateCustomerRequest,@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UpdateCustomerException {
+
+        final CustomerEntity updatedCustomerEntity = new CustomerEntity();
+        updatedCustomerEntity.setFirstName(updateCustomerRequest.getFirstName());
+        updatedCustomerEntity.setLastName(updateCustomerRequest.getLastName());
+
+        String[] bearerToken = authorization.split( "Bearer ");
+
+        final CustomerEntity customerEntity = customerBusinessService.update(bearerToken[1], updatedCustomerEntity);
+
+        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse()
+                .id(customerEntity.getUuid())
+                .firstName(customerEntity.getFirstName())
+                .lastName(customerEntity.getLastName())
+                .status("“CUSTOMER DETAILS UPDATED SUCCESSFULLY”");
+
+        return new ResponseEntity<UpdateCustomerResponse>(updateCustomerResponse,HttpStatus.OK);
+    }
+
 }
