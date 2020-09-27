@@ -134,4 +134,8 @@ public class AddressService {
         return addressDao.deleteAddress(addressEntity);
     }
 
+    public List<StateEntity> getAllStates(){
+        return stateDao.getAllStates();
+    }
+
 }

@@ -80,4 +80,20 @@ public class AddressController {
                 (new DeleteAddressResponse().id(UUID.fromString(deletedAddress.getUuid())).status("ADDRESS DELETED SUCCESSFULLY"), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/states", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<StatesListResponse> getAllStates(){
+
+        List<StateEntity> stateEntityList = addressService.getAllStates();
+        StatesListResponse stateListResponse = new StatesListResponse();
+
+        for (StateEntity se : stateEntityList) {
+            StatesList state = new StatesList();
+            state.setStateName(se.getStateName());
+            state.setId(UUID.fromString(se.getUuid()));
+            stateListResponse.addStatesItem(state);
+        }
+        return new ResponseEntity<StatesListResponse>(stateListResponse, HttpStatus.OK);
+    }
+
+
 }
