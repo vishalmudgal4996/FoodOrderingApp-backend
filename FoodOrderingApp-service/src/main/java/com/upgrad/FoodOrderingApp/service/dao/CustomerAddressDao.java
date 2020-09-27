@@ -47,4 +47,14 @@ public class CustomerAddressDao {
             return null;
         }
     }
+
+    public CustomerAddressEntity getCustomerAddressByCustomerIdAddressId(final CustomerEntity customerEntity, final AddressEntity addressEntity) {
+        try {
+            return entityManager.createNamedQuery("customerAddressByCustomerIdAddressId", CustomerAddressEntity.class)
+                    .setParameter("customer", customerEntity).setParameter( "address", addressEntity)
+                    .getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
+    }
 }
