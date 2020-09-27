@@ -135,4 +135,45 @@ public class CustomerBusinessService {
         customerDao.updateCustomer(customerEntity);
         return customerEntity;
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public CustomerEntity updatePassword(final String authorizationToken, final String oldPassword, final String newPassword) throws UpdateCustomerException, AuthorizationFailedException {
+
+        final CustomerAuthTokenEntity customerAuthToken = customerDao.getCustomerAuthToken(authorizationToken);
+        final ZonedDateTime now = ZonedDateTime.now();
+
+        if(customerAuthToken == null){
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
+        }
+
+        if(oldPassword == null || newPassword == null){
+            throw new UpdateCustomerException("UCR-003", "No field should be empty");
+        }else if(customerAuthToken.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "Customer is logged out. Log in again to access this endpoint.");
+        }else if(now.isAfter(customerAuthToken.getExpiresAt())){
+            throw new AuthorizationFailedException("ATHR-002", "Your session is expired. Log in again to access this endpoint.");
+        }else if (newPassword.length() < 8
+                || !newPassword.matches(".*[0-9]+.*")
+                || !newPassword.matches(".*[A-Z]+.*")
+                || !newPassword.matches(".*[#@$%&*!^]+.*")) {
+            throw new UpdateCustomerException("UCR-001", "Weak password!");
+        }
+
+        final CustomerEntity customerEntity = customerAuthToken.getCustomer();
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(oldPassword,customerEntity.getSalt());
+
+        if(!encryptedPassword.equals(customerEntity.getPassword())){
+            throw new UpdateCustomerException("UCR-004", "Incorrect old password!");
+        }
+
+        customerEntity.setPassword(newPassword);
+        final String password = customerEntity.getPassword();
+        final String[] encryptedText = passwordCryptographyProvider.encrypt(password);
+        customerEntity.setSalt(encryptedText[0]);
+        customerEntity.setPassword(encryptedText[1]);
+
+        customerDao.updateCustomer(customerEntity);
+        return customerEntity;
+    }
+
 }
