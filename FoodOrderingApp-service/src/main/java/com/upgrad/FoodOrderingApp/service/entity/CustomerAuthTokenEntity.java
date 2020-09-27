@@ -19,14 +19,14 @@ public class CustomerAuthTokenEntity implements Serializable {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long  id;
 
     @Column(name = "UUID")
     @NotNull
     @Size(max = 200)
     private String uuid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "CUSTOMER_ID")
     private CustomerEntity customer;
@@ -47,11 +47,11 @@ public class CustomerAuthTokenEntity implements Serializable {
     @NotNull
     private ZonedDateTime expiresAt;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

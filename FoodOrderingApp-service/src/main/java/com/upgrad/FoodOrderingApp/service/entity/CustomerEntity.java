@@ -7,6 +7,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,7 +27,7 @@ public class CustomerEntity implements Serializable {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long  id;
 
     @Column(name = "UUID")
     @NotNull
@@ -62,11 +64,14 @@ public class CustomerEntity implements Serializable {
     @ToStringExclude
     private String salt;
 
-    public long getId() {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<AddressEntity> address = new ArrayList<>();
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -124,5 +129,13 @@ public class CustomerEntity implements Serializable {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public List<AddressEntity> getAddress() {
+        return address;
+    }
+
+    public void setAddress(List<AddressEntity> address) {
+        this.address = address;
     }
 }
