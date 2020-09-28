@@ -58,7 +58,7 @@ public class ItemEntity implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getitemName() {
+    public String getItemName() {
         return itemName;
     }
 
