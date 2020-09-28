@@ -11,7 +11,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "item",uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
 @NamedQueries({
-        @NamedQuery(name = "getItemByUUID",query = "SELECT i FROM ItemEntity i WHERE i.uuid = :uuid"),
+        @NamedQuery(name = "itemByUuid", query = "select i from ItemEntity i where i.uuid=:uuid"),
+        @NamedQuery(name = "itemById", query = "select i from ItemEntity i where i.id=:id")
 })
 public class ItemEntity implements Serializable {
 
