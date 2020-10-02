@@ -41,8 +41,6 @@ public class PaymentController {
             paymentListResponse.addPaymentMethodsItem(paymentResponse);
 
         }
-
         return new ResponseEntity<PaymentListResponse>(paymentListResponse, HttpStatus.OK);
-
     }
 }

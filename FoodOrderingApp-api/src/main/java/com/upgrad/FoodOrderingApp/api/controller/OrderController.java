@@ -63,8 +63,10 @@ public class OrderController {
         if (couponEntity == null) {
             throw new CouponNotFoundException("CPF-001", "No coupon by this name");
         }
-        CouponDetailsResponse couponDetailsResponse = new CouponDetailsResponse().id(UUID.fromString(couponEntity.getUuid()))
-                .couponName(couponEntity.getCouponName()).percent(couponEntity.getPercent());
+        CouponDetailsResponse couponDetailsResponse = new CouponDetailsResponse()
+                .id(UUID.fromString(couponEntity.getUuid()))
+                .couponName(couponEntity.getCouponName())
+                .percent(couponEntity.getPercent());
 
         return new ResponseEntity<CouponDetailsResponse>(couponDetailsResponse, HttpStatus.OK);
     }
@@ -78,7 +80,7 @@ public class OrderController {
         final CustomerAuthTokenEntity customerAuthToken = customerService.getCustomerAuthToken(accessToken);
         CustomerEntity customerEntity = customerAuthToken.getCustomer();
 
-        CouponEntity couponEntity = orderService.getCouponByCouponId(saveOrderRequest.getCouponId().toString());
+        CouponEntity couponEntity = orderService.getCouponByCouponUuid(saveOrderRequest.getCouponId().toString());
 
         PaymentEntity paymentEntity = paymentService.getPaymentByUuid(saveOrderRequest.getPaymentId().toString());
 
@@ -202,9 +204,5 @@ public class OrderController {
         }else {
             return new ResponseEntity<CustomerOrderResponse>(new CustomerOrderResponse(),HttpStatus.OK);
         }
-
-
     }
-
-
 }

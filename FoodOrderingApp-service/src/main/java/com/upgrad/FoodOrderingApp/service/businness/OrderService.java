@@ -67,7 +67,7 @@ public class OrderService {
     }
 
 
-    public CouponEntity getCouponByCouponId(String couponUuid) throws CouponNotFoundException {
+    public CouponEntity getCouponByCouponUuid(String couponUuid) throws CouponNotFoundException {
 
         CouponEntity couponEntity = couponDao.getCouponByUuid(couponUuid);
         if(couponEntity == null){
